@@ -25,24 +25,30 @@ const menuGroups = [
     items: [{ path: "/", label: "Dashboard", icon: LayoutDashboard }],
   },
   {
-    label: "PRA KONTRAK",
+    label: "PENGAJUAN",
     items: [
-      { path: "/pra-kontrak", label: "Non Lelang", icon: FileText },
       { path: "/lelang", label: "Lelang", icon: Gavel },
+      { path: "/pra-kontrak", label: "Non Lelang", icon: FileText },
     ],
   },
   {
-    label: "KONTRAK",
+    label: "PELAKSANAAN",
     items: [
       { path: "/pekerjaan", label: "Pekerjaan", icon: Briefcase },
-      { path: "/tenaga-ahli", label: "Tenaga Ahli", icon: Users },
-      { path: "/alat", label: "Alat", icon: Wrench },
     ],
   },
   {
-    label: "ARSIP",
+    label: "PENYELESAIAN",
     items: [
-      { path: "/arsip", label: "Arsip", icon: Archive },
+      { path: "/arsip", label: "Arsip Pekerjaan", icon: Archive },
+      { path: "/berita-acara", label: "Berita Acara", icon: Shield },
+    ],
+  },
+  {
+    label: "INVENTARIS",
+    items: [
+      { path: "/tenaga-ahli", label: "Tenaga Ahli", icon: Users },
+      { path: "/alat", label: "Alat", icon: Wrench },
       { path: "/legalitas", label: "Sertifikat", icon: Shield },
     ],
   },
@@ -112,7 +118,7 @@ export function Sidebar() {
                       "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
                       "hover:bg-accent hover:text-accent-foreground",
                       isActive &&
-                        "bg-primary text-primary-foreground hover:bg-primary/90",
+                      "bg-primary text-primary-foreground hover:bg-primary/90",
                       collapsed && "justify-center"
                     )}
                     title={collapsed ? item.label : undefined}
@@ -136,7 +142,7 @@ export function Sidebar() {
               "flex items-center gap-3 px-3 py-2 rounded-lg transition-colors",
               "hover:bg-accent hover:text-accent-foreground",
               location.pathname === "/settings" &&
-                "bg-primary text-primary-foreground hover:bg-primary/90",
+              "bg-primary text-primary-foreground hover:bg-primary/90",
               collapsed && "justify-center"
             )}
             title={collapsed ? "Profil & Settings" : undefined}

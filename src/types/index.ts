@@ -17,6 +17,7 @@ export interface PraKontrakNonLelang extends BaseEntity {
   tanggalTarget: Date;
   pic: string;
   catatan: string;
+  dokumen: string[];
 }
 
 // Pra Kontrak Lelang

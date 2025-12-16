@@ -21,11 +21,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Edit, Trash2, Eye } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, Upload } from "lucide-react";
 import { usePraKontrakStore } from "@/stores/praKontrakStore";
 import { PraKontrakNonLelang } from "@/types";
 import { formatCurrency, formatDate, formatDateInput } from "@/lib/helpers";
 import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 type FormData = Omit<PraKontrakNonLelang, "id" | "createdAt" | "updatedAt">;
 
@@ -38,6 +39,7 @@ const initialFormData: FormData = {
   tanggalTarget: new Date(),
   pic: "",
   catatan: "",
+  dokumen: [],
 };
 
 export default function PraKontrakPage() {
@@ -73,6 +75,7 @@ export default function PraKontrakPage() {
       tanggalTarget: new Date(item.tanggalTarget),
       pic: item.pic,
       catatan: item.catatan,
+      dokumen: item.dokumen ?? [],
     });
     setViewMode(false);
     setModalOpen(true);
@@ -89,6 +92,7 @@ export default function PraKontrakPage() {
       tanggalTarget: new Date(item.tanggalTarget),
       pic: item.pic,
       catatan: item.catatan,
+      dokumen: item.dokumen ?? [],
     });
     setViewMode(true);
     setModalOpen(true);
@@ -119,6 +123,16 @@ export default function PraKontrakPage() {
     }
     setModalOpen(false);
   };
+
+  const handleUploadDoc = () => {
+    const newDoc = `Dokumen_${Date.now()}.pdf`;
+    setFormData({
+      ...formData,
+      dokumen: [...formData.dokumen, newDoc],
+    });
+    toast.success("Dokumen berhasil diunggah (mock)");
+  };
+
 
   const columns = [
     {
@@ -231,8 +245,8 @@ export default function PraKontrakPage() {
                 {viewMode
                   ? "Detail Proyek"
                   : selectedItem
-                  ? "Edit Proyek"
-                  : "Tambah Proyek Baru"}
+                    ? "Edit Proyek"
+                    : "Tambah Proyek Baru"}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -357,6 +371,45 @@ export default function PraKontrakPage() {
                     rows={3}
                   />
                 </div>
+                {/* Dokumen */}
+              <div>
+                <Label>Dokumen</Label>
+                <div className="mt-2 space-y-2">
+                  {formData.dokumen.map((doc, idx) => (
+                    <div key={idx} className="flex items-center gap-2 text-sm">
+                      <Badge variant="secondary">{doc}</Badge>
+                      {!viewMode && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() =>
+                            setFormData({
+                              ...formData,
+                              dokumen: formData.dokumen.filter(
+                                (_, i) => i !== idx
+                              ),
+                            })
+                          }
+                        >
+                          <Trash2 className="h-3 w-3" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                  {!viewMode && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleUploadDoc}
+                    >
+                      <Upload className="h-4 w-4 mr-2" />
+                      Upload Dokumen (Mock)
+                    </Button>
+                  )}
+                </div>
+              </div>
               </div>
               {!viewMode && (
                 <div className="flex justify-end gap-2">
