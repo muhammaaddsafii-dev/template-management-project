@@ -22,6 +22,7 @@ export const mockPraKontrakNonLelang: PraKontrakNonLelang[] = [
     catatan: 'Menunggu respon dari klien terkait revisi penawaran',
     createdAt: new Date('2024-01-10'),
     updatedAt: new Date('2024-01-15'),
+    dokumen: ['Dokumen Kualifikasi.pdf', 'Penawaran Teknis.pdf'],
   },
   {
     id: '2',
@@ -35,6 +36,7 @@ export const mockPraKontrakNonLelang: PraKontrakNonLelang[] = [
     catatan: 'Negosiasi harga dan scope pekerjaan',
     createdAt: new Date('2024-01-20'),
     updatedAt: new Date('2024-02-01'),
+    dokumen: ['Dokumen Kualifikasi.pdf', 'Penawaran Teknis.pdf'],
   },
   {
     id: '3',
@@ -48,6 +50,7 @@ export const mockPraKontrakNonLelang: PraKontrakNonLelang[] = [
     catatan: 'Informasi awal dari networking',
     createdAt: new Date('2024-02-15'),
     updatedAt: new Date('2024-02-15'),
+    dokumen: ['Dokumen Kualifikasi.pdf', 'Penawaran Teknis.pdf'],
   },
 ];
 
@@ -126,6 +129,7 @@ export const mockPekerjaan: Pekerjaan[] = [
     adendum: [],
     createdAt: new Date('2024-01-01'),
     updatedAt: new Date('2024-03-15'),
+    tenderType: 'lelang',
   },
   {
     id: '2',
@@ -153,6 +157,7 @@ export const mockPekerjaan: Pekerjaan[] = [
     ],
     createdAt: new Date('2024-02-01'),
     updatedAt: new Date('2024-03-10'),
+    tenderType: 'non-lelang',
   },
 ];
 

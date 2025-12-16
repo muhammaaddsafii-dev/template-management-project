@@ -29,6 +29,7 @@ import { Pekerjaan, TahapanKerja, AnggaranItem } from '@/types';
 import { formatCurrency, formatDate, formatDateInput } from '@/lib/helpers';
 import { toast } from 'sonner';
 import { Badge } from '@/components/ui/badge';
+import { TenderBadge } from '@/components/TenderBadge';
 
 type FormData = Omit<Pekerjaan, 'id' | 'createdAt' | 'updatedAt'>;
 
@@ -46,6 +47,7 @@ const initialFormData: FormData = {
   tahapan: [],
   anggaran: [],
   adendum: [],
+  tenderType: 'non-lelang',
 };
 
 export default function PekerjaanPage() {
@@ -97,6 +99,8 @@ export default function PekerjaanPage() {
       tahapan: item.tahapan,
       anggaran: item.anggaran,
       adendum: item.adendum,
+      tenderType: item.tenderType,
+
     });
     setViewMode(false);
     setActiveTab('info');
@@ -119,6 +123,7 @@ export default function PekerjaanPage() {
       tahapan: item.tahapan,
       anggaran: item.anggaran,
       adendum: item.adendum,
+      tenderType: item.tenderType,
     });
     setViewMode(true);
     setActiveTab('info');
@@ -212,6 +217,14 @@ export default function PekerjaanPage() {
       render: (item: Pekerjaan) => <StatusBadge status={item.status} />,
     },
     {
+      key: 'tenderType',
+      header: 'Tender',
+      render: (item: Pekerjaan) => (
+        <TenderBadge type={item.tenderType} />
+      ),
+    },
+
+    {
       key: 'actions',
       header: 'Aksi',
       render: (item: Pekerjaan) => (
@@ -267,7 +280,7 @@ export default function PekerjaanPage() {
                 {viewMode ? 'Detail Pekerjaan' : selectedItem ? 'Edit Pekerjaan' : 'Tambah Pekerjaan Baru'}
               </DialogTitle>
             </DialogHeader>
-            
+
             <Tabs value={activeTab} onValueChange={setActiveTab}>
               <TabsList className="grid w-full grid-cols-4">
                 <TabsTrigger value="info">Informasi</TabsTrigger>
@@ -307,6 +320,28 @@ export default function PekerjaanPage() {
                         </SelectContent>
                       </Select>
                     </div>
+                    <div>
+                      <Label htmlFor="tenderType">Jenis Tender</Label>
+                      <Select
+                        value={formData.tenderType}
+                        onValueChange={(value) =>
+                          setFormData({
+                            ...formData,
+                            tenderType: value as FormData['tenderType'],
+                          })
+                        }
+                        disabled={viewMode}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Pilih jenis tender" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="lelang">Lelang</SelectItem>
+                          <SelectItem value="non-lelang">Non Lelang</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
                     <div className="col-span-2">
                       <Label htmlFor="namaProyek">Nama Proyek</Label>
                       <Input

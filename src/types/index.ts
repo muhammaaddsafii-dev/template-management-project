@@ -1,5 +1,6 @@
 // Common types
 export type Status = 'draft' | 'active' | 'completed' | 'cancelled' | 'pending' | 'won' | 'lost';
+export type TenderType = 'lelang' | 'non-lelang';
 
 export interface BaseEntity {
   id: string;
@@ -49,6 +50,7 @@ export interface Pekerjaan extends BaseEntity {
   tahapan: TahapanKerja[];
   anggaran: AnggaranItem[];
   adendum: Adendum[];
+  tenderType: TenderType;
 }
 
 export interface TahapanKerja {
