@@ -1,9 +1,14 @@
-import { useEffect } from 'react';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { StatsCard } from '@/components/StatsCard';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { StatusBadge } from '@/components/StatusBadge';
-import { formatCurrency, formatDate, isExpiringSoon } from '@/lib/helpers';
+import { useEffect } from "react";
+import { MainLayout } from "@/components/layout/MainLayout";
+import { StatsCard } from "@/components/StatsCard";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatusBadge } from "@/components/StatusBadge";
+import {
+  formatCurrency,
+  formatDate,
+  isExpiringSoon,
+  formatCurrencyShort,
+} from "@/lib/helpers";
 import {
   Briefcase,
   FileText,
@@ -11,7 +16,7 @@ import {
   Users,
   Wrench,
   AlertTriangle,
-} from 'lucide-react';
+} from "lucide-react";
 import {
   BarChart,
   Bar,
@@ -25,21 +30,29 @@ import {
   Cell,
   LineChart,
   Line,
-} from 'recharts';
-import { usePraKontrakStore } from '@/stores/praKontrakStore';
-import { useLelangStore } from '@/stores/lelangStore';
-import { usePekerjaanStore } from '@/stores/pekerjaanStore';
-import { useTenagaAhliStore } from '@/stores/tenagaAhliStore';
-import { useAlatStore } from '@/stores/alatStore';
-import { useLegalitasStore } from '@/stores/legalitasStore';
+} from "recharts";
+import { usePraKontrakStore } from "@/stores/praKontrakStore";
+import { useLelangStore } from "@/stores/lelangStore";
+import { usePekerjaanStore } from "@/stores/pekerjaanStore";
+import { useTenagaAhliStore } from "@/stores/tenagaAhliStore";
+import { useAlatStore } from "@/stores/alatStore";
+import { useLegalitasStore } from "@/stores/legalitasStore";
 
-const COLORS = ['hsl(221, 83%, 53%)', 'hsl(173, 58%, 39%)', 'hsl(38, 92%, 50%)', 'hsl(142, 76%, 36%)', 'hsl(0, 84%, 60%)'];
+const COLORS = [
+  "hsl(221, 83%, 53%)",
+  "hsl(173, 58%, 39%)",
+  "hsl(38, 92%, 50%)",
+  "hsl(142, 76%, 36%)",
+  "hsl(0, 84%, 60%)",
+];
 
 export default function Dashboard() {
-  const { items: praKontrak, fetchItems: fetchPraKontrak } = usePraKontrakStore();
+  const { items: praKontrak, fetchItems: fetchPraKontrak } =
+    usePraKontrakStore();
   const { items: lelang, fetchItems: fetchLelang } = useLelangStore();
   const { items: pekerjaan, fetchItems: fetchPekerjaan } = usePekerjaanStore();
-  const { items: tenagaAhli, fetchItems: fetchTenagaAhli } = useTenagaAhliStore();
+  const { items: tenagaAhli, fetchItems: fetchTenagaAhli } =
+    useTenagaAhliStore();
   const { items: alat, fetchItems: fetchAlat } = useAlatStore();
   const { items: legalitas, fetchItems: fetchLegalitas } = useLegalitasStore();
 
@@ -53,44 +66,87 @@ export default function Dashboard() {
   }, []);
 
   // Calculate stats
-  const totalNilaiKontrak = pekerjaan.reduce((sum, p) => sum + p.nilaiKontrak, 0);
-  const proyekBerjalan = pekerjaan.filter(p => p.status === 'berjalan').length;
-  const tenagaAhliTersedia = tenagaAhli.filter(t => t.status === 'tersedia').length;
-  const alatTersedia = alat.filter(a => a.status === 'tersedia').length;
-  const lelangMenang = lelang.filter(l => l.status === 'menang').length;
-  const docsExpiring = legalitas.filter(l => l.reminder && isExpiringSoon(l.tanggalBerlaku)).length;
+  const totalNilaiKontrak = pekerjaan.reduce(
+    (sum, p) => sum + p.nilaiKontrak,
+    0
+  );
+  const proyekBerjalan = pekerjaan.filter(
+    (p) => p.status === "berjalan"
+  ).length;
+  const tenagaAhliTersedia = tenagaAhli.filter(
+    (t) => t.status === "tersedia"
+  ).length;
+  const alatTersedia = alat.filter((a) => a.status === "tersedia").length;
+  const lelangMenang = lelang.filter((l) => l.status === "menang").length;
+  const docsExpiring = legalitas.filter(
+    (l) => l.reminder && isExpiringSoon(l.tanggalBerlaku)
+  ).length;
 
   // Chart data
   const kontrakByMonth = [
-    { name: 'Jan', nilai: 2500 },
-    { name: 'Feb', nilai: 4500 },
-    { name: 'Mar', nilai: 3200 },
-    { name: 'Apr', nilai: 6800 },
-    { name: 'Mei', nilai: 5400 },
-    { name: 'Jun', nilai: 7200 },
+    { name: "Jan", nilai: 2500 },
+    { name: "Feb", nilai: 4500 },
+    { name: "Mar", nilai: 3200 },
+    { name: "Apr", nilai: 6800 },
+    { name: "Mei", nilai: 5400 },
+    { name: "Jun", nilai: 7200 },
   ];
 
   const statusProyek = [
-    { name: 'Berjalan', value: proyekBerjalan },
-    { name: 'Persiapan', value: pekerjaan.filter(p => p.status === 'persiapan').length || 1 },
-    { name: 'Selesai', value: pekerjaan.filter(p => p.status === 'selesai').length || 1 },
+    { name: "Berjalan", value: proyekBerjalan },
+    {
+      name: "Persiapan",
+      value: pekerjaan.filter((p) => p.status === "persiapan").length || 1,
+    },
+    {
+      name: "Selesai",
+      value: pekerjaan.filter((p) => p.status === "selesai").length || 1,
+    },
   ];
 
   const progressData = [
-    { name: 'Minggu 1', progress: 20 },
-    { name: 'Minggu 2', progress: 35 },
-    { name: 'Minggu 3', progress: 48 },
-    { name: 'Minggu 4', progress: 65 },
+    { name: "Minggu 1", progress: 20 },
+    { name: "Minggu 2", progress: 35 },
+    { name: "Minggu 3", progress: 48 },
+    { name: "Minggu 4", progress: 65 },
   ];
 
   return (
     <MainLayout title="Dashboard">
       <div className="space-y-6">
+        {/* Alerts */}
+        {docsExpiring > 0 && (
+          <Card className="border-warning">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center gap-2 text-warning">
+                <AlertTriangle className="h-5 w-5" />
+                Peringatan
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {legalitas
+                  .filter((l) => l.reminder && isExpiringSoon(l.tanggalBerlaku))
+                  .map((l) => (
+                    <div
+                      key={l.id}
+                      className="flex items-center justify-between p-2 rounded bg-warning/10"
+                    >
+                      <span className="text-sm">{l.namaDokumen}</span>
+                      <span className="text-sm text-muted-foreground">
+                        Berakhir: {formatDate(l.tanggalBerlaku)}
+                      </span>
+                    </div>
+                  ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-6 gap-4 ">
           <StatsCard
             title="Total Nilai Kontrak"
-            value={formatCurrency(totalNilaiKontrak)}
+            value={formatCurrencyShort(totalNilaiKontrak)}
             subtitle="Tahun berjalan"
             icon={TrendingUp}
             trend={{ value: 12, isPositive: true }}
@@ -126,28 +182,36 @@ export default function Dashboard() {
             icon={Wrench}
           />
         </div>
-
         {/* Charts Row */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Nilai Kontrak Chart */}
           <Card className="lg:col-span-2">
             <CardHeader>
-              <CardTitle className="text-base">Nilai Kontrak per Bulan (Juta Rupiah)</CardTitle>
+              <CardTitle className="text-base">
+                Nilai Kontrak per Bulan (Juta Rupiah)
+              </CardTitle>
             </CardHeader>
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={kontrakByMonth}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    className="stroke-muted"
+                  />
                   <XAxis dataKey="name" className="text-xs" />
                   <YAxis className="text-xs" />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: 'hsl(var(--card))',
-                      border: '1px solid hsl(var(--border))',
-                      borderRadius: '8px',
+                      backgroundColor: "hsl(var(--card))",
+                      border: "1px solid hsl(var(--border))",
+                      borderRadius: "8px",
                     }}
                   />
-                  <Bar dataKey="nilai" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
+                  <Bar
+                    dataKey="nilai"
+                    fill="hsl(var(--primary))"
+                    radius={[4, 4, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
@@ -172,7 +236,10 @@ export default function Dashboard() {
                     label={({ name, value }) => `${name}: ${value}`}
                   >
                     {statusProyek.map((_, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
                     ))}
                   </Pie>
                   <Tooltip />
@@ -192,7 +259,10 @@ export default function Dashboard() {
             <CardContent>
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart data={progressData}>
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    className="stroke-muted"
+                  />
                   <XAxis dataKey="name" className="text-xs" />
                   <YAxis className="text-xs" />
                   <Tooltip />
@@ -201,7 +271,7 @@ export default function Dashboard() {
                     dataKey="progress"
                     stroke="hsl(var(--accent))"
                     strokeWidth={2}
-                    dot={{ fill: 'hsl(var(--accent))' }}
+                    dot={{ fill: "hsl(var(--accent))" }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -216,7 +286,10 @@ export default function Dashboard() {
             <CardContent>
               <div className="space-y-4">
                 {pekerjaan.slice(0, 4).map((p) => (
-                  <div key={p.id} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
+                  <div
+                    key={p.id}
+                    className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
+                  >
                     <div className="flex-1">
                       <p className="font-medium text-sm">{p.namaProyek}</p>
                       <p className="text-xs text-muted-foreground">{p.klien}</p>
@@ -224,7 +297,9 @@ export default function Dashboard() {
                     <div className="flex items-center gap-4">
                       <div className="text-right">
                         <p className="text-sm font-medium">{p.progress}%</p>
-                        <p className="text-xs text-muted-foreground">Progress</p>
+                        <p className="text-xs text-muted-foreground">
+                          Progress
+                        </p>
                       </div>
                       <StatusBadge status={p.status} />
                     </div>
@@ -234,32 +309,6 @@ export default function Dashboard() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Alerts */}
-        {docsExpiring > 0 && (
-          <Card className="border-warning">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2 text-warning">
-                <AlertTriangle className="h-5 w-5" />
-                Peringatan
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {legalitas
-                  .filter(l => l.reminder && isExpiringSoon(l.tanggalBerlaku))
-                  .map(l => (
-                    <div key={l.id} className="flex items-center justify-between p-2 rounded bg-warning/10">
-                      <span className="text-sm">{l.namaDokumen}</span>
-                      <span className="text-sm text-muted-foreground">
-                        Berakhir: {formatDate(l.tanggalBerlaku)}
-                      </span>
-                    </div>
-                  ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </MainLayout>
   );

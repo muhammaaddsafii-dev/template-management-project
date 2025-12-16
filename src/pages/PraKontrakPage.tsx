@@ -1,50 +1,53 @@
-import { useEffect, useState } from 'react';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { DataTable } from '@/components/DataTable';
-import { StatusBadge } from '@/components/StatusBadge';
-import { ConfirmDialog } from '@/components/ConfirmDialog';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useEffect, useState } from "react";
+import { MainLayout } from "@/components/layout/MainLayout";
+import { DataTable } from "@/components/DataTable";
+import { StatusBadge } from "@/components/StatusBadge";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Plus, Edit, Trash2, Eye } from 'lucide-react';
-import { usePraKontrakStore } from '@/stores/praKontrakStore';
-import { PraKontrakNonLelang } from '@/types';
-import { formatCurrency, formatDate, formatDateInput } from '@/lib/helpers';
-import { toast } from 'sonner';
+} from "@/components/ui/select";
+import { Plus, Edit, Trash2, Eye } from "lucide-react";
+import { usePraKontrakStore } from "@/stores/praKontrakStore";
+import { PraKontrakNonLelang } from "@/types";
+import { formatCurrency, formatDate, formatDateInput } from "@/lib/helpers";
+import { toast } from "sonner";
 
-type FormData = Omit<PraKontrakNonLelang, 'id' | 'createdAt' | 'updatedAt'>;
+type FormData = Omit<PraKontrakNonLelang, "id" | "createdAt" | "updatedAt">;
 
 const initialFormData: FormData = {
-  namaProyek: '',
-  klien: '',
+  namaProyek: "",
+  klien: "",
   nilaiEstimasi: 0,
-  status: 'potensi',
+  status: "potensi",
   tanggalMulai: new Date(),
   tanggalTarget: new Date(),
-  pic: '',
-  catatan: '',
+  pic: "",
+  catatan: "",
 };
 
 export default function PraKontrakPage() {
-  const { items, isLoading, fetchItems, addItem, updateItem, deleteItem } = usePraKontrakStore();
+  const { items, isLoading, fetchItems, addItem, updateItem, deleteItem } =
+    usePraKontrakStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<PraKontrakNonLelang | null>(null);
+  const [selectedItem, setSelectedItem] = useState<PraKontrakNonLelang | null>(
+    null
+  );
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [viewMode, setViewMode] = useState(false);
 
@@ -99,7 +102,7 @@ export default function PraKontrakPage() {
   const confirmDelete = () => {
     if (selectedItem) {
       deleteItem(selectedItem.id);
-      toast.success('Data berhasil dihapus');
+      toast.success("Data berhasil dihapus");
     }
     setDeleteDialogOpen(false);
     setSelectedItem(null);
@@ -109,18 +112,18 @@ export default function PraKontrakPage() {
     e.preventDefault();
     if (selectedItem) {
       updateItem(selectedItem.id, formData);
-      toast.success('Data berhasil diperbarui');
+      toast.success("Data berhasil diperbarui");
     } else {
       addItem(formData);
-      toast.success('Data berhasil ditambahkan');
+      toast.success("Data berhasil ditambahkan");
     }
     setModalOpen(false);
   };
 
   const columns = [
     {
-      key: 'namaProyek',
-      header: 'Nama Proyek',
+      key: "namaProyek",
+      header: "Nama Proyek",
       sortable: true,
       render: (item: PraKontrakNonLelang) => (
         <div>
@@ -130,38 +133,61 @@ export default function PraKontrakPage() {
       ),
     },
     {
-      key: 'nilaiEstimasi',
-      header: 'Nilai Estimasi',
+      key: "nilaiEstimasi",
+      header: "Nilai Estimasi",
       sortable: true,
       render: (item: PraKontrakNonLelang) => formatCurrency(item.nilaiEstimasi),
     },
     {
-      key: 'status',
-      header: 'Status',
-      render: (item: PraKontrakNonLelang) => <StatusBadge status={item.status} />,
+      key: "status",
+      header: "Status",
+      render: (item: PraKontrakNonLelang) => (
+        <StatusBadge status={item.status} />
+      ),
     },
     {
-      key: 'pic',
-      header: 'PIC',
+      key: "pic",
+      header: "PIC",
       sortable: true,
     },
     {
-      key: 'tanggalTarget',
-      header: 'Target',
+      key: "tanggalTarget",
+      header: "Target",
       render: (item: PraKontrakNonLelang) => formatDate(item.tanggalTarget),
     },
     {
-      key: 'actions',
-      header: 'Aksi',
+      key: "actions",
+      header: "Aksi",
       render: (item: PraKontrakNonLelang) => (
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); handleView(item); }}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleView(item);
+            }}
+          >
             <Eye className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); handleEdit(item); }}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(item);
+            }}
+          >
             <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); handleDelete(item); }}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(item);
+            }}
+          >
             <Trash2 className="h-4 w-4 text-destructive" />
           </Button>
         </div>
@@ -170,7 +196,7 @@ export default function PraKontrakPage() {
   ];
 
   return (
-    <MainLayout title="Pra Kontrak Non Lelang">
+    <MainLayout title="Project Non Lelang">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -180,7 +206,7 @@ export default function PraKontrakPage() {
           </div>
           <Button onClick={handleCreate}>
             <Plus className="h-4 w-4 mr-2" />
-            Tambah Proyek
+            Tambah Project
           </Button>
         </div>
 
@@ -202,7 +228,11 @@ export default function PraKontrakPage() {
           <DialogContent className="max-w-2xl">
             <DialogHeader>
               <DialogTitle>
-                {viewMode ? 'Detail Proyek' : selectedItem ? 'Edit Proyek' : 'Tambah Proyek Baru'}
+                {viewMode
+                  ? "Detail Proyek"
+                  : selectedItem
+                  ? "Edit Proyek"
+                  : "Tambah Proyek Baru"}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -212,7 +242,9 @@ export default function PraKontrakPage() {
                   <Input
                     id="namaProyek"
                     value={formData.namaProyek}
-                    onChange={(e) => setFormData({ ...formData, namaProyek: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, namaProyek: e.target.value })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -222,7 +254,9 @@ export default function PraKontrakPage() {
                   <Input
                     id="klien"
                     value={formData.klien}
-                    onChange={(e) => setFormData({ ...formData, klien: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, klien: e.target.value })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -233,7 +267,12 @@ export default function PraKontrakPage() {
                     id="nilaiEstimasi"
                     type="number"
                     value={formData.nilaiEstimasi}
-                    onChange={(e) => setFormData({ ...formData, nilaiEstimasi: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        nilaiEstimasi: Number(e.target.value),
+                      })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -242,7 +281,12 @@ export default function PraKontrakPage() {
                   <Label htmlFor="status">Status</Label>
                   <Select
                     value={formData.status}
-                    onValueChange={(value) => setFormData({ ...formData, status: value as FormData['status'] })}
+                    onValueChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        status: value as FormData["status"],
+                      })
+                    }
                     disabled={viewMode}
                   >
                     <SelectTrigger>
@@ -262,7 +306,9 @@ export default function PraKontrakPage() {
                   <Input
                     id="pic"
                     value={formData.pic}
-                    onChange={(e) => setFormData({ ...formData, pic: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, pic: e.target.value })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -273,7 +319,12 @@ export default function PraKontrakPage() {
                     id="tanggalMulai"
                     type="date"
                     value={formatDateInput(formData.tanggalMulai)}
-                    onChange={(e) => setFormData({ ...formData, tanggalMulai: new Date(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        tanggalMulai: new Date(e.target.value),
+                      })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -284,7 +335,12 @@ export default function PraKontrakPage() {
                     id="tanggalTarget"
                     type="date"
                     value={formatDateInput(formData.tanggalTarget)}
-                    onChange={(e) => setFormData({ ...formData, tanggalTarget: new Date(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        tanggalTarget: new Date(e.target.value),
+                      })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -294,7 +350,9 @@ export default function PraKontrakPage() {
                   <Textarea
                     id="catatan"
                     value={formData.catatan}
-                    onChange={(e) => setFormData({ ...formData, catatan: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, catatan: e.target.value })
+                    }
                     disabled={viewMode}
                     rows={3}
                   />
@@ -302,11 +360,15 @@ export default function PraKontrakPage() {
               </div>
               {!viewMode && (
                 <div className="flex justify-end gap-2">
-                  <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setModalOpen(false)}
+                  >
                     Batal
                   </Button>
                   <Button type="submit">
-                    {selectedItem ? 'Simpan Perubahan' : 'Tambah'}
+                    {selectedItem ? "Simpan Perubahan" : "Tambah"}
                   </Button>
                 </div>
               )}

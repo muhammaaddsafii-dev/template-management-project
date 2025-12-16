@@ -1,42 +1,42 @@
-import { useEffect, useState } from 'react';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { DataTable } from '@/components/DataTable';
-import { StatusBadge } from '@/components/StatusBadge';
-import { ConfirmDialog } from '@/components/ConfirmDialog';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useEffect, useState } from "react";
+import { MainLayout } from "@/components/layout/MainLayout";
+import { DataTable } from "@/components/DataTable";
+import { StatusBadge } from "@/components/StatusBadge";
+import { ConfirmDialog } from "@/components/ConfirmDialog";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Plus, Edit, Trash2, Eye, Upload } from 'lucide-react';
-import { useLelangStore } from '@/stores/lelangStore';
-import { useTenagaAhliStore } from '@/stores/tenagaAhliStore';
-import { useAlatStore } from '@/stores/alatStore';
-import { PraKontrakLelang } from '@/types';
-import { formatCurrency, formatDate, formatDateInput } from '@/lib/helpers';
-import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/select";
+import { Plus, Edit, Trash2, Eye, Upload } from "lucide-react";
+import { useLelangStore } from "@/stores/lelangStore";
+import { useTenagaAhliStore } from "@/stores/tenagaAhliStore";
+import { useAlatStore } from "@/stores/alatStore";
+import { PraKontrakLelang } from "@/types";
+import { formatCurrency, formatDate, formatDateInput } from "@/lib/helpers";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
-type FormData = Omit<PraKontrakLelang, 'id' | 'createdAt' | 'updatedAt'>;
+type FormData = Omit<PraKontrakLelang, "id" | "createdAt" | "updatedAt">;
 
 const initialFormData: FormData = {
-  namaLelang: '',
-  instansi: '',
+  namaLelang: "",
+  instansi: "",
   nilaiPagu: 0,
   nilaiPenawaran: 0,
-  status: 'persiapan',
+  status: "persiapan",
   tanggalLelang: new Date(),
   tanggalHasil: null,
   timAssigned: [],
@@ -45,12 +45,16 @@ const initialFormData: FormData = {
 };
 
 export default function LelangPage() {
-  const { items, fetchItems, addItem, updateItem, deleteItem } = useLelangStore();
-  const { items: tenagaAhliList, fetchItems: fetchTenagaAhli } = useTenagaAhliStore();
+  const { items, fetchItems, addItem, updateItem, deleteItem } =
+    useLelangStore();
+  const { items: tenagaAhliList, fetchItems: fetchTenagaAhli } =
+    useTenagaAhliStore();
   const { items: alatList, fetchItems: fetchAlat } = useAlatStore();
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<PraKontrakLelang | null>(null);
+  const [selectedItem, setSelectedItem] = useState<PraKontrakLelang | null>(
+    null
+  );
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [viewMode, setViewMode] = useState(false);
 
@@ -111,7 +115,7 @@ export default function LelangPage() {
   const confirmDelete = () => {
     if (selectedItem) {
       deleteItem(selectedItem.id);
-      toast.success('Data lelang berhasil dihapus');
+      toast.success("Data lelang berhasil dihapus");
     }
     setDeleteDialogOpen(false);
     setSelectedItem(null);
@@ -121,10 +125,10 @@ export default function LelangPage() {
     e.preventDefault();
     if (selectedItem) {
       updateItem(selectedItem.id, formData);
-      toast.success('Data lelang berhasil diperbarui');
+      toast.success("Data lelang berhasil diperbarui");
     } else {
       addItem(formData);
-      toast.success('Data lelang berhasil ditambahkan');
+      toast.success("Data lelang berhasil ditambahkan");
     }
     setModalOpen(false);
   };
@@ -132,13 +136,13 @@ export default function LelangPage() {
   const handleUploadDoc = () => {
     const newDoc = `Dokumen_${Date.now()}.pdf`;
     setFormData({ ...formData, dokumen: [...formData.dokumen, newDoc] });
-    toast.success('Dokumen berhasil diunggah (mock)');
+    toast.success("Dokumen berhasil diunggah (mock)");
   };
 
   const columns = [
     {
-      key: 'namaLelang',
-      header: 'Nama Lelang',
+      key: "namaLelang",
+      header: "Nama Lelang",
       sortable: true,
       render: (item: PraKontrakLelang) => (
         <div>
@@ -148,38 +152,59 @@ export default function LelangPage() {
       ),
     },
     {
-      key: 'nilaiPagu',
-      header: 'Nilai Pagu',
+      key: "nilaiPagu",
+      header: "Nilai Pagu",
       sortable: true,
       render: (item: PraKontrakLelang) => formatCurrency(item.nilaiPagu),
     },
     {
-      key: 'nilaiPenawaran',
-      header: 'Nilai Penawaran',
+      key: "nilaiPenawaran",
+      header: "Nilai Penawaran",
       render: (item: PraKontrakLelang) => formatCurrency(item.nilaiPenawaran),
     },
     {
-      key: 'status',
-      header: 'Status',
+      key: "status",
+      header: "Status",
       render: (item: PraKontrakLelang) => <StatusBadge status={item.status} />,
     },
     {
-      key: 'tanggalLelang',
-      header: 'Tanggal Lelang',
+      key: "tanggalLelang",
+      header: "Tanggal Lelang",
       render: (item: PraKontrakLelang) => formatDate(item.tanggalLelang),
     },
     {
-      key: 'actions',
-      header: 'Aksi',
+      key: "actions",
+      header: "Aksi",
       render: (item: PraKontrakLelang) => (
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); handleView(item); }}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleView(item);
+            }}
+          >
             <Eye className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); handleEdit(item); }}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleEdit(item);
+            }}
+          >
             <Edit className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" onClick={(e) => { e.stopPropagation(); handleDelete(item); }}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete(item);
+            }}
+          >
             <Trash2 className="h-4 w-4 text-destructive" />
           </Button>
         </div>
@@ -188,7 +213,7 @@ export default function LelangPage() {
   ];
 
   return (
-    <MainLayout title="Pra Kontrak Lelang">
+    <MainLayout title="Project Lelang">
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
@@ -198,7 +223,7 @@ export default function LelangPage() {
           </div>
           <Button onClick={handleCreate}>
             <Plus className="h-4 w-4 mr-2" />
-            Tambah Lelang
+            Tambah Project
           </Button>
         </div>
 
@@ -213,7 +238,7 @@ export default function LelangPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-2xl font-bold text-blue-600">
-                {items.filter(i => i.status === 'evaluasi').length}
+                {items.filter((i) => i.status === "evaluasi").length}
               </div>
               <p className="text-sm text-muted-foreground">Dalam Evaluasi</p>
             </CardContent>
@@ -221,7 +246,7 @@ export default function LelangPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-2xl font-bold text-green-600">
-                {items.filter(i => i.status === 'menang').length}
+                {items.filter((i) => i.status === "menang").length}
               </div>
               <p className="text-sm text-muted-foreground">Menang</p>
             </CardContent>
@@ -229,7 +254,7 @@ export default function LelangPage() {
           <Card>
             <CardContent className="pt-6">
               <div className="text-2xl font-bold text-red-600">
-                {items.filter(i => i.status === 'kalah').length}
+                {items.filter((i) => i.status === "kalah").length}
               </div>
               <p className="text-sm text-muted-foreground">Kalah</p>
             </CardContent>
@@ -254,7 +279,11 @@ export default function LelangPage() {
           <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>
-                {viewMode ? 'Detail Lelang' : selectedItem ? 'Edit Lelang' : 'Tambah Lelang Baru'}
+                {viewMode
+                  ? "Detail Lelang"
+                  : selectedItem
+                  ? "Edit Lelang"
+                  : "Tambah Lelang Baru"}
               </DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -264,7 +293,9 @@ export default function LelangPage() {
                   <Input
                     id="namaLelang"
                     value={formData.namaLelang}
-                    onChange={(e) => setFormData({ ...formData, namaLelang: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, namaLelang: e.target.value })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -274,7 +305,9 @@ export default function LelangPage() {
                   <Input
                     id="instansi"
                     value={formData.instansi}
-                    onChange={(e) => setFormData({ ...formData, instansi: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, instansi: e.target.value })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -283,7 +316,12 @@ export default function LelangPage() {
                   <Label htmlFor="status">Status</Label>
                   <Select
                     value={formData.status}
-                    onValueChange={(value) => setFormData({ ...formData, status: value as FormData['status'] })}
+                    onValueChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        status: value as FormData["status"],
+                      })
+                    }
                     disabled={viewMode}
                   >
                     <SelectTrigger>
@@ -304,7 +342,12 @@ export default function LelangPage() {
                     id="nilaiPagu"
                     type="number"
                     value={formData.nilaiPagu}
-                    onChange={(e) => setFormData({ ...formData, nilaiPagu: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        nilaiPagu: Number(e.target.value),
+                      })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -315,7 +358,12 @@ export default function LelangPage() {
                     id="nilaiPenawaran"
                     type="number"
                     value={formData.nilaiPenawaran}
-                    onChange={(e) => setFormData({ ...formData, nilaiPenawaran: Number(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        nilaiPenawaran: Number(e.target.value),
+                      })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -326,7 +374,12 @@ export default function LelangPage() {
                     id="tanggalLelang"
                     type="date"
                     value={formatDateInput(formData.tanggalLelang)}
-                    onChange={(e) => setFormData({ ...formData, tanggalLelang: new Date(e.target.value) })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        tanggalLelang: new Date(e.target.value),
+                      })
+                    }
                     disabled={viewMode}
                     required
                   />
@@ -336,8 +389,19 @@ export default function LelangPage() {
                   <Input
                     id="tanggalHasil"
                     type="date"
-                    value={formData.tanggalHasil ? formatDateInput(formData.tanggalHasil) : ''}
-                    onChange={(e) => setFormData({ ...formData, tanggalHasil: e.target.value ? new Date(e.target.value) : null })}
+                    value={
+                      formData.tanggalHasil
+                        ? formatDateInput(formData.tanggalHasil)
+                        : ""
+                    }
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        tanggalHasil: e.target.value
+                          ? new Date(e.target.value)
+                          : null,
+                      })
+                    }
                     disabled={viewMode}
                   />
                 </div>
@@ -350,15 +414,19 @@ export default function LelangPage() {
                   {tenagaAhliList.map((ta) => (
                     <Badge
                       key={ta.id}
-                      variant={formData.timAssigned.includes(ta.id) ? 'default' : 'outline'}
+                      variant={
+                        formData.timAssigned.includes(ta.id)
+                          ? "default"
+                          : "outline"
+                      }
                       className="cursor-pointer"
                       onClick={() => {
                         if (viewMode) return;
                         setFormData({
                           ...formData,
                           timAssigned: formData.timAssigned.includes(ta.id)
-                            ? formData.timAssigned.filter(id => id !== ta.id)
-                            : [...formData.timAssigned, ta.id]
+                            ? formData.timAssigned.filter((id) => id !== ta.id)
+                            : [...formData.timAssigned, ta.id],
                         });
                       }}
                     >
@@ -375,15 +443,21 @@ export default function LelangPage() {
                   {alatList.map((alat) => (
                     <Badge
                       key={alat.id}
-                      variant={formData.alatAssigned.includes(alat.id) ? 'default' : 'outline'}
+                      variant={
+                        formData.alatAssigned.includes(alat.id)
+                          ? "default"
+                          : "outline"
+                      }
                       className="cursor-pointer"
                       onClick={() => {
                         if (viewMode) return;
                         setFormData({
                           ...formData,
                           alatAssigned: formData.alatAssigned.includes(alat.id)
-                            ? formData.alatAssigned.filter(id => id !== alat.id)
-                            : [...formData.alatAssigned, alat.id]
+                            ? formData.alatAssigned.filter(
+                                (id) => id !== alat.id
+                              )
+                            : [...formData.alatAssigned, alat.id],
                         });
                       }}
                     >
@@ -405,10 +479,14 @@ export default function LelangPage() {
                           type="button"
                           variant="ghost"
                           size="sm"
-                          onClick={() => setFormData({
-                            ...formData,
-                            dokumen: formData.dokumen.filter((_, i) => i !== idx)
-                          })}
+                          onClick={() =>
+                            setFormData({
+                              ...formData,
+                              dokumen: formData.dokumen.filter(
+                                (_, i) => i !== idx
+                              ),
+                            })
+                          }
                         >
                           <Trash2 className="h-3 w-3" />
                         </Button>
@@ -416,7 +494,12 @@ export default function LelangPage() {
                     </div>
                   ))}
                   {!viewMode && (
-                    <Button type="button" variant="outline" size="sm" onClick={handleUploadDoc}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleUploadDoc}
+                    >
                       <Upload className="h-4 w-4 mr-2" />
                       Upload Dokumen (Mock)
                     </Button>
@@ -426,11 +509,15 @@ export default function LelangPage() {
 
               {!viewMode && (
                 <div className="flex justify-end gap-2">
-                  <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setModalOpen(false)}
+                  >
                     Batal
                   </Button>
                   <Button type="submit">
-                    {selectedItem ? 'Simpan Perubahan' : 'Tambah'}
+                    {selectedItem ? "Simpan Perubahan" : "Tambah"}
                   </Button>
                 </div>
               )}
