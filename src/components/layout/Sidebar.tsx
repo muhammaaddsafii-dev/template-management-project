@@ -47,7 +47,7 @@ const menuGroups = [
   {
     label: "INVENTARIS",
     items: [
-      { path: "/tenaga-ahli", label: "Tenaga Ahli", icon: Users },
+      { path: "/tenaga-ahli", label: "Tim", icon: Users },
       { path: "/alat", label: "Alat", icon: Wrench },
       { path: "/legalitas", label: "Dokumen", icon: Shield },
     ],
